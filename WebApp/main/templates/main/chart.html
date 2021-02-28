@@ -1,0 +1,102 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Visualization
+{% endblock title %}
+
+
+{% block content %}
+    <style>
+        .button {
+            border: none;
+            color: #ffffff;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .button_failure {
+            background-color: #ff0000;
+            position: absolute;
+            left: 1615px;
+            top: 400px;
+            width: 150px;
+        }
+
+        .button_repair {
+            background-color: #00ff00;
+            position: absolute;
+            left: 1615px;
+            top: 400px;
+            width: 150px;
+        }
+
+    </style>
+    <h1 style="color:black;font-size:40px;">Temperature monitoring - {{ building }}</h1>
+    <div id="tester" style="width:1400px;height:800px;">
+        <script>
+            let temps = '{{ temps }}'.slice(1, -1).split(',');
+            let time = '{{ time }}'.slice(1, -1).split(',');
+            time_format = time.filter(function (value, index) {
+                return index % Math.floor(time.length / 15) === 0;
+            });
+            TESTER = document.getElementById('tester');
+            Plotly.newPlot(TESTER, [{
+                x: time,
+                y: temps,
+            }], {
+                title: 'System state',
+                margin: {t: -2},
+                xaxis: {
+                    title: 'Time',
+                    tickvals: time_format,
+                    ticktext: time_format
+                },
+                yaxis: {title: 'Temperature [°C]'},
+            })
+            ;
+        </script>
+
+        <div id="button_failure" style="position:relative; top: -700px; left: -140px;">
+            <form method="post" action="">
+                {% csrf_token %}
+                <button class="button button_failure" type="submit" value="clicked" name="failure">FAILURE</button>
+            </form>
+        </div>
+
+        <div id="button_repair" style="position:relative; top: -600px; left: -140px;">
+            <form method="post" action="">
+                {% csrf_token %}
+                <button class="button button_repair" type="submit" value="clicked" name="repair">REPAIR</button>
+            </form>
+        </div>
+
+        <div id="gauge" style="position:relative; top: -650px; left: 1400px;">
+            <iframe src="https://gauge-app.herokuapp.com/" width="300" height="300" scrolling="no"></iframe>
+        </div>
+
+        <div id="buildings" style="position:relative; top: -1170px; left: 1420px;">
+            <p style="font-size:150%;">Choose building to monitor:</p>
+            <p>---------------------------------------------------</p>
+            <form method="post" action="">
+                {% csrf_token %}
+                <button class="B1" type="submit" value="choosen" name="B1">&emsp; B1 &emsp;</button>
+                <button class="B2" type="submit" value="choosen" name="B2" style="margin-left: 40px">&emsp; B2 &emsp;
+                </button>
+                <button class="B3" type="submit" value="choosen" name="B3" style="margin-left: 30px">&emsp; B3 &emsp;
+                </button>
+            </form>
+            <p>---------------------------------------------------</p>
+        </div>
+
+        <script>
+            window.setTimeout(function () {
+                window.location.reload();
+            }, 10000);
+        </script>
+    </div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}
+    Others
+{% endblock %}
+
+{% block content %}
+    <h1 style="color:black;font-size:40px;"> Campus map</h1>
+    <br>
+    <img src="{% static "WebApp/map.jpg" %}" alt="map" style="height: 50%" width=80%>
+    <br>
+    <br>
+    <br>
+    <img src="{% static "WebApp/legend.jpg" %}" alt="legend" style="height: 50%" width="80%">
+{% endblock %}
